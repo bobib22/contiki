@@ -79,6 +79,19 @@ AUTOSTART_PROCESSES(&dinas_sink_process, &send_process);
 
 /*---------------------------------------------------------------------------*/
 static void
+route_callback(int event, uip_ipaddr_t *route, uip_ipaddr_t *ipaddr)
+{
+		  PRINTF("callback notification chgt route\n");
+  if(event == UIP_DS6_NOTIFICATION_DEFRT_ADD || event == UIP_DS6_NOTIFICATION_DEFRT_RM) {
+	  PRINTF("la route par defaut a ete changee\n");
+	  rpl_updown_set_parent();
+  } else if(event == UIP_DS6_NOTIFICATION_ROUTE_RM || event == UIP_DS6_NOTIFICATION_ROUTE_ADD) {
+  	  PRINTF("une route a ete changee\n");
+      rpl_updown_set_children();
+  }
+}
+
+static void
 print_local_addresses(void)
 {
   int i;
@@ -118,6 +131,9 @@ uip_ipaddr_t destination_ipaddr;
 int rep_num = 0;
 PROCESS_THREAD(dinas_sink_process, ev, data)
 {
+	
+  static struct uip_ds6_notification n;
+  
   uip_ipaddr_t ipaddr;
   struct uip_ds6_addr *root_if;
 
@@ -141,6 +157,8 @@ PROCESS_THREAD(dinas_sink_process, ev, data)
 #endif /* UIP_CONF_ROUTER */
 
   print_local_addresses();
+
+  uip_ds6_notification_add(&n, route_callback);
   
   rpl_updown_init();
 
