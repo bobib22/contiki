@@ -50,9 +50,9 @@
 #include "dev/slip.h"
 #endif
 
-
+#ifndef PROCESS_CONF_NO_PROCESS_NAMES 
 #define PROCESS_CONF_NO_PROCESS_NAMES 0
-
+#endif /* PROCESS_CONF_NO_PROCESS_NAMES */
 /*---------------------------------------------------------------------------*/
 /*
  * Platform definition
