@@ -38,10 +38,10 @@
 #include <string.h>
 #include <ctype.h>
 #include "contiki.h"
-#include "net/ip/uip.h"
-#include "net/ip/uiplib.h"
-#include "net/ipv6/uip-ds6.h"
-#include "net/ip/uip-udp-packet.h"
+#include "net/uip.h"
+#include "net/uiplib.h"
+#include "net/uip-ds6.h"
+#include "net/uip-udp-packet.h"
 #include "net/rpl/rpl.h"
 #include "net/netstack.h"
 #include "dev/serial-line.h"
@@ -53,7 +53,7 @@
 #include "dev/uart1.h"
 #endif
 #define DEBUG DEBUG_PRINT
-#include "net/ip/uip-debug.h"
+#include "net/uip-debug.h"
 #include "proximity-cache.h"
 #include "dinas-msg.h"
 #include "rpl-updown.h"

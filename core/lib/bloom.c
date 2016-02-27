@@ -44,7 +44,7 @@
 #include "bloom.h"
 #include "lib/crc16.h"
 #define DEBUG DEBUG_PRINT
-#include "net/ip/uip-debug.h"
+#include "net/uip-debug.h"
 
 #define SETBIT(a, n) (a[n/CHAR_BIT] |= (1<<(n%CHAR_BIT)))  
 #define GETBIT(a, n) (a[n/CHAR_BIT] & (1<<(n%CHAR_BIT)))

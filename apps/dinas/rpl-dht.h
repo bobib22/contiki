@@ -37,7 +37,7 @@
 #define __RPL_DHT_H__
 
 #include "contiki.h"
-#include "net/ip/uip.h"
+#include "net/uip.h"
 #include "lib/bloom.h"
 #include "dinas-msg.h"
 

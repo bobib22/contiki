@@ -40,7 +40,7 @@
 #include <stddef.h> /*for size_t*/
 #include "sys/clock.h"
 #include "contiki.h"
-#include "net/ip/uip.h"
+#include "net/uip.h"
 #include "lib/bloom.h"
 
 

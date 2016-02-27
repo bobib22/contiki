@@ -38,7 +38,7 @@
 #include <stddef.h> /*for size_t*/
 #include "proximity-cache.h"
 #define DEBUG DEBUG_PRINT
-#include "net/ip/uip-debug.h"
+#include "net/uip-debug.h"
 
 CACHEITEM cache[CACHE_SIZE];
 int cs = 0; /* number of items in cache */

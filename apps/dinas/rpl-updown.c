@@ -39,15 +39,15 @@
 #include "contiki.h"
 #include "lib/random.h"
 #include "net/netstack.h"
-#include "net/ip/uiplib.h"
-#include "net/ip/uip-udp-packet.h"
-#include "net/ipv6/uip-ds6.h"
+#include "net/uiplib.h"
+#include "net/uip-udp-packet.h"
+#include "net/uip-ds6.h"
 #include "net/rpl/rpl.h"
 #include "rpl-updown.h"
 #include "proximity-cache.h"
 #include "lib/bloom.h"
 #define DEBUG DEBUG_PRINT
-#include "net/ip/uip-debug.h"
+#include "net/uip-debug.h"
 #define UDP_SERVER_PORT 5688
 
 static unsigned long time_offset;

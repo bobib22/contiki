@@ -37,7 +37,7 @@
 #define __RPL_UPDOWN_H__
 
 #include "contiki.h"
-#include "net/ip/uip.h"
+#include "net/uip.h"
 #include "dinas-msg.h"
 
 #ifdef FLOODING_PARAM

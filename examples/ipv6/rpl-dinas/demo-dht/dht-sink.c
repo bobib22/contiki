@@ -40,7 +40,7 @@
 #include "contiki.h"
 #include "contiki-lib.h"
 #include "contiki-net.h"
-#include "net/ip/uip.h"
+#include "net/uip.h"
 #include "net/rpl/rpl.h"
 #include "net/netstack.h"
 #include "dev/serial-line.h"
@@ -52,7 +52,7 @@
 #include "dev/uart1.h"
 #endif
 #define DEBUG DEBUG_PRINT
-#include "net/ip/uip-debug.h"
+#include "net/uip-debug.h"
 #include "proximity-cache.h"
 #include "dinas-msg.h"
 #include "rpl-dht.h"

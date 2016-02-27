@@ -38,7 +38,7 @@
 #include <ctype.h>
 #include "dinas-msg.h"
 #define DEBUG DEBUG_PRINT
-#include "net/ip/uip-debug.h"
+#include "net/uip-debug.h"
 
 
 /*---------------------------------------------------------------------------*/
