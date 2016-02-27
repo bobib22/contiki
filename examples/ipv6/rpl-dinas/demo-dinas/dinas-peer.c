@@ -46,7 +46,7 @@
 #include "net/netstack.h"
 #include "dev/serial-line.h"
 #include "lib/random.h"
-#include "sys/node-id.h"  /* TRICK to have the node_id (good only for Cooja sim.) */
+// #include "sys/node-id.h"  /* TRICK to have the node_id (good only for Cooja sim.) */
 #if CONTIKI_TARGET_Z1
 #include "dev/uart0.h"
 #else
@@ -68,6 +68,9 @@ static uip_ipaddr_t global_ipaddr;
 static struct uip_udp_conn *server_conn;
 static struct uip_udp_conn *client_conn;
 BLOOM bloomname;
+typedef int bool;
+enum { false, true };
+int node_id;
 
 
 /*---------------------------------------------------------------------------*/
@@ -267,8 +270,22 @@ PROCESS_THREAD(send_process, ev, data)
 {
   static struct etimer period_timer, wait_timer;
   char location[12];
+  bool waiting_node_id=true;
+  
   
   PROCESS_BEGIN();
+  
+  PRINTF("Waiting for the node id. Please type \"nodeid <id>\" in the serial link\n");
+
+  while(waiting_node_id){
+  	PROCESS_WAIT_EVENT_UNTIL(ev == serial_line_event_message && data != NULL);
+    if(strncmp(data, "nodeid ", 7) == 0) { //récupérer de netdbclient.c
+      node_id = atoi((char *)data + 7);
+	  waiting_node_id = false;
+	  PRINTF("nodeid: %d\n",node_id);
+    } 
+
+  }
 
   /* Create this node's name once for all */
   bloomname = bloom_create();
