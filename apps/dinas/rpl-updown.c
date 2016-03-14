@@ -105,11 +105,12 @@ rpl_updown_recv(DINASMSG* msg, uip_ipaddr_t* provider_ipaddr, struct uip_udp_con
   }   
   else if (dinas_msg_get_type(msg->config) == 1) /* request */
   {
-  	/*
-  	PRINTF("DINAS routing, received request for:\n");
-  	bloom_print(&msg->bloom);
-    proximity_cache_print();
-    */
+	if (DEBUGDINAS){
+	  	PRINTF("DINAS routing, received request for:");
+	  	bloom_print(&msg->bloom);
+		PRINTF("My cache contains :\n");
+	    proximity_cache_print();
+	}
     
   	/*  
      * if the requested bloom matches one of those that are in cache, send a reply msg to the request owner 
@@ -208,11 +209,12 @@ rpl_updown_send(DINASMSG* msg, uip_ipaddr_t* provider_ipaddr, struct uip_udp_con
       if (num_children == 1) /* only one child, which was the message provider */
       { 
       	destination_ipaddr = *provider_ipaddr;
-      	/*
+		if (DEBUGDINAS){
+
       	PRINTF("Sending to: ");
         PRINT6ADDR(&destination_ipaddr);
         PRINTF("\n");
-        */
+		}
         uip_udp_packet_sendto(client_conn, msg, sizeof(DINASMSG),
                           &destination_ipaddr, UIP_HTONS(UDP_SERVER_PORT)); 
         sent_messages += 1;
@@ -228,11 +230,12 @@ rpl_updown_send(DINASMSG* msg, uip_ipaddr_t* provider_ipaddr, struct uip_udp_con
     }
     else /* this is not the sink */
     { 
-      /*	     	
-      PRINTF("up to parent \n"); 	
+		if (DEBUGDINAS){
+
+      PRINTF("up to parent \n");
       PRINT6ADDR(&parent_ipaddr);
       PRINTF("\n");
-      */
+  }
       destination_ipaddr = parent_ipaddr;
       sprint6addr(destination, &destination_ipaddr);
     }
@@ -295,16 +298,19 @@ rpl_updown_send(DINASMSG* msg, uip_ipaddr_t* provider_ipaddr, struct uip_udp_con
   }
     
   if (strcmp(destination, "NO-DEST") != 0) {
-  	/*
+	if (DEBUGDINAS){
+
     PRINTF("Sending to: ");
     PRINT6ADDR(&destination_ipaddr);
     PRINTF("\n");
-    */
+	}
     uip_udp_packet_sendto(client_conn, msg, sizeof(DINASMSG),
                           &destination_ipaddr, UIP_HTONS(UDP_SERVER_PORT)); 
     sent_messages += 1; 
-  }            
-  /*PRINTF("end updown_send\n");*/         
+  }
+	if (DEBUGDINAS){              
+  	  PRINTF("end updown_send\n");
+	}
 }
 
 

@@ -87,10 +87,10 @@ route_callback(int event, uip_ipaddr_t *route, uip_ipaddr_t *ipaddr)
 		  PRINTF("callback notification chgt route\n");
   if(event == UIP_DS6_NOTIFICATION_DEFRT_ADD || event == UIP_DS6_NOTIFICATION_DEFRT_RM) {
 	  PRINTF("la route par defaut a ete changee\n");
-	  rpl_updown_set_parent();
+	  rpl_dht_set_parent();
   } else if(event == UIP_DS6_NOTIFICATION_ROUTE_RM || event == UIP_DS6_NOTIFICATION_ROUTE_ADD) {
   	  PRINTF("une route a ete changee\n");
-      rpl_updown_set_children();
+      rpl_dht_set_children();
   }
 }
 
@@ -191,17 +191,18 @@ PROCESS_THREAD(dinas_peer_process, ev, data)
         }
         else {
         
-          /*
+			if (DEBUGDINAS){
+
           PRINTF("-----------\n I am a peer: ");
           PRINT6ADDR(&global_ipaddr);
           PRINTF("\n");
-          */
-          //PRINTF("-- recv --\n");
-          /*
+          
+          PRINTF("-- recv --\n");
+          
           PRINTF("Received msg from ");
           PRINT6ADDR(&UIP_IP_BUF->srcipaddr);
           PRINTF("\n");
-          */
+          }
         
           if (first_recv == 1)
           {
@@ -222,25 +223,28 @@ PROCESS_THREAD(dinas_peer_process, ev, data)
             /* peers do store replies! */
             ///// rpl_dht_store_item(msg, &ipaddr);
           
-            /*
+			if (DEBUGDINAS){
+            
             PRINTF("Received reply from ");
             PRINT6ADDR(&ipaddr);
-            PRINTF("\n");       
-            */
+            PRINTF("\n");
+			}
             return -1;	
           }
           else /* msg is a notification, a request or a neighbor announcement */
           {	
-            /*	
-            if (msg->type == 0) 	
-              PRINTF("Received notification from %s\n", short_ipaddr);
-            else if (msg->type == 1) 
-              PRINTF("Received request from from %s\n", short_ipaddr);
-            */
-            /*  
-            PRINT6ADDR(&UIP_IP_BUF->srcipaddr);
-            PRINTF("\n");	
-            */
+			  if (DEBUGDINAS){
+	if (dinas_msg_get_type(msg->config) == 0) {
+	            PRINTF("Received notification from ");
+	            PRINT6ADDR(&UIP_IP_BUF->srcipaddr);
+	            PRINTF("\n");
+	          }
+	          else if (dinas_msg_get_type(msg->config) == 1) {
+	            PRINTF("Received request from ");
+	            PRINT6ADDR(&UIP_IP_BUF->srcipaddr);
+	            PRINTF("\n");
+	          }
+		  	  }
           
             ipaddr = UIP_IP_BUF->srcipaddr;
           
@@ -262,11 +266,12 @@ PROCESS_THREAD(dinas_peer_process, ev, data)
           	    reply.req_num = msg->req_num;
                 destination_ipaddr = msg->owner_addr;
 		  	  
-                /*
+				if (DEBUGDINAS){
+
                 PRINTF("Got it! Now sending reply to ");
                 PRINT6ADDR(&destination_ipaddr);
                 PRINTF("\n");
-                */
+				}
                 uip_udp_packet_sendto(client_conn, &reply, sizeof(DINASMSG),
                             &destination_ipaddr, UIP_HTONS(UDP_SERVER_PORT));
                 return -1;            
@@ -410,14 +415,17 @@ PROCESS_THREAD(send_process, ev, data)
   		        unsigned short r = random_rand();
                 /*PRINTF("r = %u\n", r);*/
                 room_number = (r)%(NUM_ROOMS) + 1; /* random number between 1 and NUM_ROOMS */
-                /*
-                PRINTF("room_number = %d\n", room_number);
-                PRINTF("node_id = %d\n", node_id);
-                */
+                // /*
+
+				// PRINTF("room_number = %d\n", room_number);
+				//PRINTF("node_id = %d\n", node_id);
+
   		      } while (room_number == node_id); /* we want to search for another room's sensor */
+		  	if (DEBUGDINAS){
   		    
-  		      //PRINTF("room_number: %d\n", room_number);
-              BLOOM bloom;
+  		      PRINTF("room_number: %d\n", room_number);
+		  }
+			  BLOOM bloom;
               bloom = bloom_create();
               bloom_add(&bloom, "netservice-_dinas._udp.local");
               if (room_number%2 == 0)
@@ -440,10 +448,15 @@ PROCESS_THREAD(send_process, ev, data)
               /* local check */
               if (rpl_dht_check_cache(&msg) == 1)
               { 
-      	        //PRINTF("In my cache!\n");
+			  	if (DEBUGDINAS){	  
+      	        PRINTF("In my cache!\n");
+				}
       	        rep_num++;
       	        loc_rep_num++;
                 PRINTF("hit %d ", msg.req_num);	
+				if (DEBUGDINAS){
+          	    PRINTF("lrp %d\n", msg.req_num);
+				}
           	    bloom_print(&msg.bloom);
           	    return -1;
               }

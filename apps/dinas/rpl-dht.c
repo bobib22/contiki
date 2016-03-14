@@ -100,19 +100,20 @@ rpl_dht_recv(DINASMSG* msg, uip_ipaddr_t* provider_ipaddr, struct uip_udp_conn* 
   * for any msg of type=0,1,2, pass the msg (with TTL-1) to dinas_dht_send() 
   */	
 	
-  /* // TODO: optional
-  if (dinas_msg_get_type(msg->config) == 0) // notification
-  {	
-   	rpl_dht_store_item(msg, provider_ipaddr);  
-  }   
-  else */ 
+    /* // TODO: enable DHT-R by uncommenting this part
+    if (dinas_msg_get_type(msg->config) == 0) // notification
+    {	
+     	rpl_dht_store_item(msg, provider_ipaddr, 1);  
+    }   
+    else //End DHT-R */ 
   if (dinas_msg_get_type(msg->config) == 1) /* request */
   {
-  	/*
-  	PRINTF("DINAS routing, received request for:\n");
-  	bloom_print(&msg->bloom);
-    proximity_cache_print();
-    */
+	if (DEBUGDINAS){
+  		PRINTF("DINAS routing, received request for:");
+		bloom_print(&msg->bloom);
+		PRINTF("My cache contains :\n");
+		proximity_cache_print();
+	}
     
   	/*  
      * if the requested bloom matches one of those that are in cache, send a reply msg to the request owner 
@@ -131,12 +132,15 @@ rpl_dht_recv(DINASMSG* msg, uip_ipaddr_t* provider_ipaddr, struct uip_udp_conn* 
       destination_ipaddr = msg->owner_addr;
       PRINTF("hit %d ", msg->req_num);
       bloom_print(&msg->bloom);
-      /*
-      PRINTF("Now sending reply to ");
-      PRINT6ADDR(&destination_ipaddr);
-      PRINTF("\n");
-      */
-      uip_udp_packet_sendto(client_conn, &reply, sizeof(DINASMSG), &destination_ipaddr, UIP_HTONS(UDP_SERVER_PORT));
+  	  
+	  if (DEBUGDINAS){
+
+	      PRINTF("Now sending reply to ");
+	      PRINT6ADDR(&destination_ipaddr);
+	      PRINTF("\n");
+	  }
+      
+	  uip_udp_packet_sendto(client_conn, &reply, sizeof(DINASMSG), &destination_ipaddr, UIP_HTONS(UDP_SERVER_PORT));
       return; /* comment this, if you want that multiple replies can be received by the requester */
     }
   }
@@ -154,7 +158,9 @@ rpl_dht_recv(DINASMSG* msg, uip_ipaddr_t* provider_ipaddr, struct uip_udp_conn* 
   
   /* Message forwarding for notifications and requests */
   rpl_dht_send(msg, provider_ipaddr, client_conn);  // send() decides the destination
-  //PRINTF("end dht_recv\n");
+	if (DEBUGDINAS){
+		  PRINTF("end dht_recv\n");
+	  }
 }
 
 
@@ -242,11 +248,12 @@ rpl_dht_send(DINASMSG* msg, uip_ipaddr_t* provider_ipaddr, struct uip_udp_conn* 
       if (num_children == 1) /* only one child, which was the message provider */
       { 
       	destination_ipaddr = *provider_ipaddr;
-      	/*
+		if (DEBUGDINAS){
+
       	PRINTF("Sending to: ");
         PRINT6ADDR(&destination_ipaddr);
         PRINTF("\n");
-        */
+		}
         uip_udp_packet_sendto(client_conn, msg, sizeof(DINASMSG),
                           &destination_ipaddr, UIP_HTONS(UDP_SERVER_PORT)); 
         sent_messages += 1;
@@ -255,11 +262,12 @@ rpl_dht_send(DINASMSG* msg, uip_ipaddr_t* provider_ipaddr, struct uip_udp_conn* 
     }
     else /* this is not the sink */
     { 
-      /*	     	
+	if (DEBUGDINAS){
+
       PRINTF("up to parent \n"); 	
       PRINT6ADDR(&parent_ipaddr);
       PRINTF("\n");
-      */
+	}
       destination_ipaddr = parent_ipaddr;
       sprint6addr(destination, &destination_ipaddr);
       

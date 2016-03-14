@@ -46,6 +46,13 @@
 #define FLOODING 0
 #endif
 
+#ifdef DEBUG_DINAS
+#define DEBUGDINAS DEBUG_DINAS
+#else
+#define DEBUGDINAS 0
+#endif
+
+
 int rpl_updown_check_cache(DINASMSG* msg);
 uip_ipaddr_t* rpl_updown_get_parent_ipaddr();
 void rpl_updown_init(void);
