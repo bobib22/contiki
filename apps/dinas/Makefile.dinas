@@ -1,1 +1,2 @@
-dinas_src = proximity-cache.c dinas-msg.c rpl-updown.c rpl-dht.c
+dinas_src = proximity-cache.c dinas-msg.c rpl-updown.c  #Uncomment to compile demo-dinas
+#dinas_src = proximity-cache.c dinas-msg.c rpl-dht.c #Uncomment to compile demo-dht
