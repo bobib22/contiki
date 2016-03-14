@@ -33,7 +33,7 @@
  *         Michele Amoretti <michele.amoretti@unipr.it> 
  */
 
-#define DEBUG_DINAS 0 //additional debug for dinas
+#define DEBUG_DINAS 1 //additional debug for dinas
 
 // #define RPL_CONF_LEAF_ONLY 1
 #define UIP_CONF_TCP 0
