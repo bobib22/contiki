@@ -92,12 +92,12 @@
 // #define CACHE_SIZE_PARAM 11 /* this is C */
 #define CACHE_SIZE_PARAM 11 /* this is C */
 
+//dht
 #define T1_PARAM 30
-// #define T1_PARAM 0
 #define T2_PARAM 90
 
-/* overwrite params defined in dinas-updown.h */
-#define FLOODING_PARAM 0
+//dht-R
+// #define T1_PARAM 60
+// #define T2_PARAM 90
 
-#define P_FAIL 0
-
+/* overwrite params defined in dinas-updown.h
