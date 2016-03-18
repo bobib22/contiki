@@ -55,6 +55,9 @@ grep "$1;rp_num " $trace |cut -d ' ' -f 2
 bug
 total_rq
 tabs 4
+if [ -z $2 ];then
+	exit
+fi
 if [ "$2" == "debug" ];then
 printf "nodes\t"
 for i in $(nodes) ;do printf "$i\t";done
@@ -75,7 +78,7 @@ printf "total\t"
 for i in $(nodes) ;do printf "$(stat_total_rp_by_node $i)\t\t";done
 echo
 else
-	grep -E "m3-$2;rq |m3-$2;rp |m3-$2;lrp" $1
+	grep -E "m3-$2;rq |m3-$2;rp |m3-$2;lrp|sending reply to aaaa::m3-$2" $1
 fi
 
 
@@ -104,25 +107,9 @@ fi
 # avec rp supérieur à 300
 # platform=0;countgood=0;count=0;for i in output/dht*.log;do if [[ $(grep Platform $i |wc -l) -ne 20 ]];then ((platform++));((count++));else if [[ $(grep 'rp_num ' $i | cut -d' ' -f2 |awk '{ SUM += $1} END { print SUM }') -gt 300 ]];then echo $i;./debug.sh $i;((countgood++));((count++));else ((count++));fi;fi;done;echo  "$countgood bonnes traces sur $count with $platform reboot"
 
+# tar -zcvf strasbourg-dht-R2.tar.gz $((platform=0;countgood=0;count=0;for i in output/dht-R*realtime.log;do if [[ $(grep Platform $i |wc -l) -ne 20 ]];then ((platform++));((count++));else if [[ $(grep 'rp_num ' $i | cut -d' ' -f2 |awk '{ SUM += $1} END { print SUM }') -gt 250 ]];then echo $i;((countgood++));((count++));else ((count++));fi;fi;done;)|xargs)
+
 
 # DEBUG
 # - entrelacer RPL et dinas : grep m3-29 $trace |grep 'rq \|hit \|rp \|default route'
-# - ne prendre que le début d'un fichier pour faire le dodag à ce temps précix : grep -v dinas_updown_send $trace |sed -E '/259.137/q' | ./id-uid.sh strasbourg > /tmp/dag-259
-# - 
-
-# pcregrep
-# for i in $(seq 1 18);do cat $FILES |grep -e"rq $i$" -e"rp $i$" -e"hit $i$" |pcregrep -vM "rq $i\n.*hit $i\n.*rp $i";done
-
-#trim le graphe à un certain temps
-
-
-
-
-# -e "rq $1" -e "rp $1" -e "lrp $1" -e "hit $1"
-# grep m3-36 <traces> | grep -e ";rq " -e ";rp " -e ";lrp " -e ";hit "
-#
-# nom trace
-# n° noeud :
-# nb rq
-# nb hit
-# nb rp
+# - ne prendre que le début d'un fichier pour faire le dodag à ce temps précix : grep -v dinas_updown_send $trace |sed -E '/259.137/q' | ./id-uid.sh strasbourg > /tmp/d
