@@ -103,15 +103,27 @@ echo "Waiting for the experiment to end in $TIME min."
 # sleep 180 #wait 60s for RPL to create the dodag before starting Dinas requests
 sleep 60 #wait 60s for RPL to create the dodag before starting Dinas requests
 if [ "$1" != "notbusy" ] && [ "$1" != "config/fullwithoutfailure.cfg" ] ;then
-	
-	./node-id.sh $ID $Border_router #send the node id to the dinas process
-	sleep 1
+
 	while [ $(grep 'nodeid:' $LOG |wc -l) -ne 20 ] ;do
-		grep 'nodeid:' $LOG |cut -d ';' -f2 |sort > active-triee
-		awk -F';' 'NR==FNR{c[$1]++;next};c[$1] == 0' active-triee test-trie >> test
-		echo >> test
+		j=1
+		for nodeid in $(echo $CLIENTS | sed 's/+/ /g');do
+
+			echo -e "m3-$nodeid;nodeid $j" >> test
+			((j++))
+		done
 		sleep 1
 	done
+
+
+	#
+	# ./node-id.sh $ID $Border_router #send the node id to the dinas process
+	# sleep 1
+	# while [ $(grep 'nodeid:' $LOG |wc -l) -ne 20 ] ;do
+	# 	grep 'nodeid:' $LOG |cut -d ';' -f2 |sort > active-triee
+	# 	awk -F';' 'NR==FNR{c[$1]++;next};c[$1] == 0' active-triee test-trie >> test
+	# 	echo >> test
+	# 	sleep 1
+	# done
 fi
 
 sleep $((TIME-1))m
