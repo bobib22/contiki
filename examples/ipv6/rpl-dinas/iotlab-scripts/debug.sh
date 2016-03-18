@@ -78,7 +78,7 @@ printf "total\t"
 for i in $(nodes) ;do printf "$(stat_total_rp_by_node $i)\t\t";done
 echo
 else
-	grep -E "m3-$2;rq |m3-$2;rp |m3-$2;lrp|sending reply to aaaa::m3-$2" $1
+	cat $1 |./id-uid.sh strasbourg| grep -E "m3-$2;rq |m3-$2;rp |m3-$2;lrp|sending reply to aaaa::m3-$2"
 fi
 
 
