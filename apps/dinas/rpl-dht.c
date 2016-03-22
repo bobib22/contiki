@@ -100,12 +100,12 @@ rpl_dht_recv(DINASMSG* msg, uip_ipaddr_t* provider_ipaddr, struct uip_udp_conn* 
   * for any msg of type=0,1,2, pass the msg (with TTL-1) to dinas_dht_send() 
   */	
 	
-    /* // TODO: enable DHT-R by uncommenting this part
-    if (dinas_msg_get_type(msg->config) == 0) // notification
-    {	
-     	rpl_dht_store_item(msg, provider_ipaddr, 1);  
-    }   
-    else //End DHT-R */ 
+    //  // TODO: enable DHT-R by uncommenting this part
+    // if (dinas_msg_get_type(msg->config) == 0) // notification
+    // {
+    //  	rpl_dht_store_item(msg, provider_ipaddr, 1);
+    // }
+    // else //End DHT-R
   if (dinas_msg_get_type(msg->config) == 1) /* request */
   {
 	if (DEBUGDINAS){
@@ -272,8 +272,8 @@ rpl_dht_send(DINASMSG* msg, uip_ipaddr_t* provider_ipaddr, struct uip_udp_conn* 
       sprint6addr(destination, &destination_ipaddr);
       
       /* store name along the notification path */
-  	  if (dinas_msg_get_type(msg->config) == 0)  // notification
-  	    rpl_dht_store_item(msg, provider_ipaddr, 0);
+  	  // if (dinas_msg_get_type(msg->config) == 0)  // notification
+  	  //   rpl_dht_store_item(msg, provider_ipaddr, 0);
     }
   }
   
@@ -285,8 +285,9 @@ rpl_dht_send(DINASMSG* msg, uip_ipaddr_t* provider_ipaddr, struct uip_udp_conn* 
       if (dinas_msg_get_type(msg->config) == 0) { // notification 	
       	// store locally
         rpl_dht_store_item(msg, provider_ipaddr, 1);	
-        PRINTF("no children: name stored locally \n");
+        PRINTF("no children: name stored locally :");
         bloom_print(&msg->bloom);
+	    PRINTF("\n");
       }
       return; /* do not further propagate the msg */
     }
@@ -298,8 +299,9 @@ rpl_dht_send(DINASMSG* msg, uip_ipaddr_t* provider_ipaddr, struct uip_udp_conn* 
   	  //PRINT6ADDR(&destination_ipaddr);
   	  if (dinas_msg_get_type(msg->config) == 0) { // notification
   	    rpl_dht_store_item(msg, provider_ipaddr, 1);
-  	    PRINTF(" no further propagation: name stored locally \n");
-        bloom_print(&msg->bloom);	
+	    PRINTF(" no further propagation: name stored locally : ");
+	    bloom_print(&msg->bloom);	
+	    PRINTF("\n");	  
   	  }
       return; /* do not further propagate the msg */
   	}
@@ -309,8 +311,8 @@ rpl_dht_send(DINASMSG* msg, uip_ipaddr_t* provider_ipaddr, struct uip_udp_conn* 
   	  if (strncmp(temp,"aaaa",4) != 0) /* this is not the sink */
   	  {
   	  	/* store name along the notification path */
-  	  	if (dinas_msg_get_type(msg->config) == 0)  // notification
-  	   	  rpl_dht_store_item(msg, provider_ipaddr, 0);  
+  	  	// if (dinas_msg_get_type(msg->config) == 0)  // notification
+  	  	//   	   	  rpl_dht_store_item(msg, provider_ipaddr, 0);
   	  }
   	}
   }
@@ -466,8 +468,3 @@ void rpl_dht_store_item(DINASMSG *msg, uip_ipaddr_t* provider_ipaddr, int force)
     proximity_cache_add_item(ci);
   //proximity_cache_print();
 }
-
-
-
-
-
