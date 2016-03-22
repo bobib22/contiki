@@ -109,6 +109,31 @@ fi
 
 # tar -zcvf strasbourg-dht-R2.tar.gz $((platform=0;countgood=0;count=0;for i in output/dht-R*realtime.log;do if [[ $(grep Platform $i |wc -l) -ne 20 ]];then ((platform++));((count++));else if [[ $(grep 'rp_num ' $i | cut -d' ' -f2 |awk '{ SUM += $1} END { print SUM }') -gt 250 ]];then echo $i;((countgood++));((count++));else ((count++));fi;fi;done;)|xargs)
 
+# NODEID corruption
+#grep ';nodeid:' $trace | sort -t ' ' -nk 2
+#
+# if [[ $(grep Platform $trace |wc -l) -ne 20 ]];then echo "reboot";else if [[ $(grep ';nodeid:' $trace | awk -F ' ' '{ sum += $2 } END { print sum }') -ne 210 ]];then echo "nodeid corruption";else  echo "good";fi;fi
+#
+# count=0;good=0;platform=0;corruption=0;for trace in dinas-strasbourg/dht_2016032*realtime.log;do ((count++));if [[ $(grep Platform $trace |wc -l) -ne 20 ]];then ((platform++));else if [[ $(grep ';nodeid:' $trace | awk -F ' ' '{ sum += $2 } END { print sum }') -ne 210 ]];then ((corruption++));else ((good++));echo $trace;fi;fi;done; echo "$good good traces against a total of $count traces avec $platform reboot et $corruption corruption id"
+
+
+#BLOOM MAPPING
+# file generation
+# grep ';name' $trace | sed 's/.*;\(m3-[0-9]\{1,3\}\);name: \([0-1]\+\)/s\/\2\/\1-BF\/g/g' | sort -t '-' -nk 2
+# 
+# log analysis
+# for node in $(cat $trace |cut -d ';' -f 2 | sort -t - -nk 2 |uniq |grep m3 | xargs);do grep $node $trace | grep -A 11 cache_ | grep -v 0000000000000000000000000000000000000000 | ./bloom_mapping.sh strasbourg ;done
+#
+# redundant names in dht
+# (for node in $(cat $trace |cut -d ';' -f 2 | sort -t - -nk 2 |uniq |grep m3 | xargs);do grep $node $trace | grep -A 11 cache_ | grep -v 0000000000000000000000000000000000000000 | ./bloom_mapping.sh strasbourg ;done)|grep m3-[0-9]*-BF | cut -d ';' -f 3 |sort |uniq -c | sort -n
+
+# debug a trace
+# cat $trace | grep -v 'RPL\|rpl'| ./id-uid.sh strasbourg | more
+# cat $trace | grep -v 'RPL\|rpl'| ./id-uid.sh strasbourg | ./bloom_mapping.sh strasbourg| more
+# grep stored $trace | ./bloom_mapping.sh strasbourg
+# rechercher motif /64;notification
+# dodag.sh
+# 
 
 # DEBUG
 # - entrelacer RPL et dinas : grep m3-29 $trace |grep 'rq \|hit \|rp \|default route'
