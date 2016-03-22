@@ -281,7 +281,7 @@ PROCESS_THREAD(send_process, ev, data)
   static struct etimer period_timer, wait_timer;
   char location[14];
   bool waiting_node_id=true;
-  
+  int bool=0;
   
   PROCESS_BEGIN();
   
@@ -289,13 +289,24 @@ PROCESS_THREAD(send_process, ev, data)
 
   while(waiting_node_id){
   	PROCESS_WAIT_EVENT_UNTIL(ev == serial_line_event_message && data != NULL);
-    if(strncmp(data, "nodeid ", 7) == 0) { //récupérer de netdbclient.c
-      node_id = atoi((char *)data + 7);
-	  waiting_node_id = false;
-	  PRINTF("nodeid: %d\n",node_id);
-    } 
 
+      printf("serial sent %s\n",(char *) data);
+
+	  while(strlen(data) > 7){
+  		if (strncmp(data,"nodeid ",7) == 0 && strlen(data)<=9){//récupérer de netdbclient.c
+  			bool=1;
+  			break;
+  		}
+  		data=data+1;
+	  }
+	  
+	if (bool == 1){
+      node_id = atoi((char *)data + 7);
+  	  waiting_node_id = false;
+  	  PRINTF("nodeid: %d\n",node_id);
+    }
   }
+  
   /* Create this node's name once for all */
   bloomname = bloom_create();
   bloom_add(&bloomname, "netservice-_dinas._udp.local");
