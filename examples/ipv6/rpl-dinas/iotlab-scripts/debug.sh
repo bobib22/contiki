@@ -14,6 +14,9 @@ bug(){
 	if [ $(grep Platform $trace |wc -l) -ne 20 ];then
 		echo "log is corrupted : one node at least rebooted in the middle of the experiment"
 	fi
+	if [[ $(grep ';nodeid:' $trace | awk -F ' ' '{ sum += $2 } END { print sum }') -ne 210 ]];then 
+		echo "log is corrupted : id corruption"
+	fi
 }
 
 nodes(){
