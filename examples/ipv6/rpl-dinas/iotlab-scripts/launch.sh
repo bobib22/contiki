@@ -12,8 +12,8 @@ fi
 mkdir output &>/dev/null
 
 # the dinas experiment you want to launch
-# version=dinas
-version=dht
+version=dinas
+# version=dht
 
 cd ../demo-$version && make && cd -
 
