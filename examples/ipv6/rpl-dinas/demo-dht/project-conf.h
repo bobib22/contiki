@@ -100,4 +100,4 @@
 // #define T1_PARAM 60
 // #define T2_PARAM 90
 
-/* overwrite params defined in dinas-updown.h
+#define P_FAIL 0
