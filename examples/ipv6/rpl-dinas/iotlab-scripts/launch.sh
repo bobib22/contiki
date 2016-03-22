@@ -12,8 +12,8 @@ fi
 mkdir output &>/dev/null
 
 # the dinas experiment you want to launch
-version=dinas
-# version=dht
+# version=dinas
+version=dht
 
 cd ../demo-$version && make && cd -
 
@@ -54,7 +54,7 @@ echo "submitting new one"
 
 # experiment-cli submit -d 1440 -n demodinas -l lille,m3,"22+23+25+54+58+133+135+157+188+200+212+213+216+221+224+225+229+235+240+255"
 
-OUTPUT=`experiment-cli submit -d $TIME -n demodinas -l $SITE,m3,$CLIENTS`
+OUTPUT=`experiment-cli submit -d $TIME -n demo$version -l $SITE,m3,$CLIENTS`
 echo $OUTPUT
 if [ "$?" != "0" ] ;
 then
@@ -102,6 +102,7 @@ echo "Waiting for the experiment to end in $TIME min."
 #Node-id distribution
 # sleep 180 #wait 60s for RPL to create the dodag before starting Dinas requests
 sleep 60 #wait 60s for RPL to create the dodag before starting Dinas requests
+# sleep 10 #to debug serial
 if [ "$1" != "notbusy" ] && [ "$1" != "config/fullwithoutfailure.cfg" ] ;then
 
 	while [ $(grep 'nodeid:' $LOG |wc -l) -ne 20 ] ;do
@@ -111,7 +112,7 @@ if [ "$1" != "notbusy" ] && [ "$1" != "config/fullwithoutfailure.cfg" ] ;then
 			echo -e "m3-$nodeid;nodeid $j" >> test
 			((j++))
 		done
-		sleep 1
+		sleep 3
 	done
 
 
