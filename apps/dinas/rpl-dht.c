@@ -100,12 +100,12 @@ rpl_dht_recv(DINASMSG* msg, uip_ipaddr_t* provider_ipaddr, struct uip_udp_conn* 
   * for any msg of type=0,1,2, pass the msg (with TTL-1) to dinas_dht_send() 
   */	
 	
-    //  // TODO: enable DHT-R by uncommenting this part
-    // if (dinas_msg_get_type(msg->config) == 0) // notification
-    // {
-    //  	rpl_dht_store_item(msg, provider_ipaddr, 1);
-    // }
-    // else //End DHT-R
+     // TODO: enable DHT-R by uncommenting this part
+    if (dinas_msg_get_type(msg->config) == 0) // notification
+    {
+     	rpl_dht_store_item(msg, provider_ipaddr, 1);
+    }
+    else //End DHT-R
   if (dinas_msg_get_type(msg->config) == 1) /* request */
   {
 	if (DEBUGDINAS){
