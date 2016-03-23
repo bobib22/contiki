@@ -83,7 +83,7 @@ C=$(extract_C)
 D=$(extract_D)
 TX=$(extract_TX)
 CONFIG=$(basename $1)
-LOG="output/$(basename ${version})_$(date -d "today" +"%Y%m%d_%H%M")_CHAN${CHANNEL}_RX${RSSI}_TX${TX}_${CONFIG%.cfg}_BR${Border_router}_${NODE_NUMBER}Nodes_C${C}_D${D}_T1${T1}_T2${T2}_TIME${TIME}.log"
+LOG="output/$(basename ${version}-r)_$(date -d "today" +"%Y%m%d_%H%M")_CHAN${CHANNEL}_RX${RSSI}_TX${TX}_${CONFIG%.cfg}_BR${Border_router}_${NODE_NUMBER}Nodes_C${C}_D${D}_T1${T1}_T2${T2}_TIME${TIME}.log"
 
 tail -f test | serial_aggregator -i $ID > $LOG 2>&1 & # only work if
 # launched on the platform where the experiment is taking place
