@@ -466,7 +466,7 @@ PROCESS_THREAD(send_process, ev, data)
 				}
       	        rep_num++;
       	        loc_rep_num++;
-                PRINTF("hit %d ", msg.req_num);	
+                PRINTF("hit %d\n", msg.req_num);	
 				if (DEBUGDINAS){
           	    PRINTF("lrp %d\n", msg.req_num);
 				}
